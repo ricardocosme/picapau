@@ -1,0 +1,59 @@
+
+import testing ;
+import boost ;
+boost.use-project ;
+
+local occi_inc = "/home/rcosme/build/v3o2/gcc48/dependencies/ext/oracle/include" ;
+local occi_lib = "/home/rcosme/build/v3o2/gcc48/dependencies/ext/oracle/lib/Linux64e6" ;
+local boost_expected = "/home/rcosme/build/expected" ;
+
+project occi
+  : requirements
+    <include>$(occi_inc)
+    <search>$(occi_lib)
+  ;
+
+lib occi ;
+lib clntsh ;
+
+path-constant here : . ;
+path-constant root : $(here)/../ ;
+
+project picapau_test
+  : requirements
+    <cxxflags>-std=c++11
+    <include>$(here)
+    <include>$(root)/include
+    <include>$(boost_expected)/include
+    <library>/occi//occi
+    <library>/occi//clntsh
+    <use>/boost//headers
+    : default-build
+    <variant>release
+    <threading>single
+  ;
+
+# run simple_query.cpp ;
+# run simple_query_with_log.cpp ;
+# run simple_query_with_custom_log.cpp ;
+
+exe simple_query
+  : simple_query.cpp
+  ;
+explicit simple_query ;
+
+exe simple_query_with_log
+  : simple_query_with_log.cpp
+  ;
+explicit simple_query_with_log ;
+
+exe simple_query_with_custom_log
+  : simple_query_with_custom_log.cpp
+  ;
+explicit simple_query_with_custom_log ;
+
+install stage
+  : simple_query
+    simple_query_with_log
+    simple_query_with_custom_log
+  ;
