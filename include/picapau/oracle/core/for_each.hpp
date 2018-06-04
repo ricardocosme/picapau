@@ -22,7 +22,7 @@ struct column_fetch
     {
         if(!tuple) return;
         
-        auto fetched = fetch<Column>(rs, idx);
+        auto fetched = fetch<Column>(rs, idx++);
         if(fetched) column = fetched.value();
         else tuple = fetched.get_unexpected();
     }

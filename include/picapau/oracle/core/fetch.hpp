@@ -16,6 +16,10 @@ int fetch<int>(::oracle::occi::ResultSet& rs, std::size_t idx)
 { return rs.getInt(idx); }
     
 template<>
+float fetch<float>(::oracle::occi::ResultSet& rs, std::size_t idx)
+{ return rs.getFloat(idx); }
+    
+template<>
 std::string fetch<std::string>(::oracle::occi::ResultSet& rs, std::size_t idx)
 { return rs.getString(idx); }
     
