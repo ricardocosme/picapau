@@ -8,7 +8,7 @@
 
 #include "picapau/detail/macro_decltype_auto_return.hpp"
 #include "picapau/oracle/core/with_log/query.hpp"
-#include "picapau/oracle/rs/result_set.hpp"
+#include "picapau/oracle/rs/with_log/result_set.hpp"
 #include "picapau/rs/mbind.hpp"
 #include <string>
 

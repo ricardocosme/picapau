@@ -1,6 +1,7 @@
 #define BOOST_TEST_MODULE PICAPAU_ORACLE
 #include <boost/test/unit_test.hpp>
 
+#include <iostream>
 #include "cfg.hpp"
 #include "picapau/oracle/core/connect.hpp"
 #include "picapau/oracle/core/for_each.hpp"
@@ -21,6 +22,7 @@ BOOST_AUTO_TEST_CASE(SuccessfulSelect)
              {
                  db::for_each(r.rows, [&](boost::expected<vector1<int>, std::string> row)
                                {
+                                   // std::cout << row.get_unexpected().value() << std::endl;
                                    BOOST_TEST(row.valid());
                                    v.push_back(at_c<0>(row.value()));
                                });
