@@ -34,9 +34,9 @@ struct column_fetch
 template<typename ResultSet, typename F>
 inline void for_each(ResultSet& rs, F&& f)
 {    
-    std::size_t idx{1};
     while(rs->next())
     {
+        std::size_t idx{1};
         using tuple_t = typename ResultSet::tuple_t;
         using response_t = typename ResultSet::expected_tuple_t;
         response_t tuple(tuple_t{});
