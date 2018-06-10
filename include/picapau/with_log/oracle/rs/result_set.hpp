@@ -7,10 +7,10 @@
 #pragma once
 
 #include "picapau/oracle/core/query_result.hpp"
-#include "picapau/oracle/core/with_log/for_each.hpp"
+#include "picapau/with_log/oracle/core/for_each.hpp"
 #include <utility>
 
-namespace picapau { namespace oracle { namespace rs { namespace with_log {
+namespace picapau { namespace with_log { namespace oracle { namespace rs { 
 
 template<typename QueryResult, typename Sink>
 struct result_set_source
@@ -25,7 +25,7 @@ struct result_set_source
         else
         {
             auto& rsink = _sink;
-            oracle::core::with_log::for_each(_rs.value().rows,[&rsink](expected_tuple_t i){ rsink(i); });
+            oracle::core::for_each(_rs.value().rows,[&rsink](expected_tuple_t i){ rsink(i); });
         }
     }
     
@@ -40,7 +40,7 @@ namespace picapau { namespace rs {
 template<typename Error, typename Sink, typename...Columns>
 inline auto operator>>=(boost::expected<oracle::core::query_result<Columns...>, Error> lhs, Sink&& sink)
 PICAPAU_DECLTYPE_AUTO_RETURN
-( oracle::rs::with_log::result_set_source<oracle::core::query_result<Columns...>, Sink>
+    ( picapau::with_log::oracle::rs::result_set_source<oracle::core::query_result<Columns...>, Sink>
   (std::move(lhs), std::forward<Sink>(sink)) )
     
 }}

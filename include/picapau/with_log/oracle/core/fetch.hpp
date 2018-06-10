@@ -6,7 +6,7 @@
 #include <string>
 #include <type_traits>
 
-namespace picapau { namespace oracle { namespace core { namespace with_log {
+namespace picapau { namespace with_log { namespace oracle { namespace core { 
 
 template<typename Column, typename F = handle_log> 
 struct fetch
@@ -16,7 +16,7 @@ struct fetch
         F(boost::expected<Column, std::string>, std::string)>::type
     operator()(::oracle::occi::ResultSet& rs, std::size_t idx)
     {
-        auto res = oracle::core::fetch<Column>(rs, idx);
+        auto res = picapau::oracle::core::fetch<Column>(rs, idx);
 
         std::string log;
         if(res) log += logln("fetch", "'" + std::to_string(res.value()) +

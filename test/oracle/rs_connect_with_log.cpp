@@ -9,11 +9,12 @@
 
 #include "cfg.hpp"
 #include "picapau/utils/log_to_cout.hpp"
-#include "picapau/oracle/rs/with_log/connect.hpp"
+#include "picapau/with_log/oracle/rs/connect.hpp"
 #include <vector>
 
-namespace db = picapau::oracle::core::with_log;
-namespace rs = picapau::oracle::rs::with_log;
+namespace sql = picapau::with_log;
+namespace db = sql::oracle::core;
+namespace rs = sql::oracle::rs;
 
 BOOST_AUTO_TEST_CASE(SuccessfulConnect)
 {

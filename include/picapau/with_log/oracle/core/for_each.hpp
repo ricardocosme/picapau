@@ -6,14 +6,14 @@
 
 #pragma once
 
-#include "picapau/oracle/core/with_log/fetch.hpp"
+#include "picapau/with_log/oracle/core/fetch.hpp"
 #include "picapau/oracle/core/for_each.hpp"
 #include "picapau/oracle/core/query_result.hpp"
 #include <boost/fusion/include/for_each.hpp>
 #include <boost/fusion/include/mpl.hpp>
 #include <boost/fusion/include/vector.hpp>
 
-namespace picapau { namespace oracle { namespace core { namespace with_log {
+namespace picapau { namespace with_log { namespace oracle { namespace core { 
 
 template<typename Tuple, typename Log>
 struct column_fetch
@@ -21,7 +21,7 @@ struct column_fetch
     template<typename Column>
     void operator()(Column& column) const
     {
-        oracle::core::fetch_column(rs, column, idx, tuple, fetch<Column, Log>{log});
+        picapau::oracle::core::fetch_column(rs, column, idx, tuple, fetch<Column, Log>{log});
     }
     ::oracle::occi::ResultSet& rs;
     std::size_t& idx;
@@ -37,7 +37,7 @@ for_each(ResultSet& rs, F&& f, Log&& hlog = handle_log())
     std::size_t n_tuples{0};
     while(rs->next())
     {        
-        oracle::core::fetch_tuple<ResultSet, F, column_fetch<response_t, Log>>(rs, f, hlog);
+        picapau::oracle::core::fetch_tuple<ResultSet, F, column_fetch<response_t, Log>>(rs, f, hlog);
         ++n_tuples;
     }
     

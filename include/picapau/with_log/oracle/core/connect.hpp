@@ -6,14 +6,15 @@
 
 #pragma once
 
+#include "picapau/utils/log_to_cout.hpp"
 #include "picapau/oracle/core/connect.hpp"
 #include "picapau/support/log.hpp"
 #include <string>
 #include <type_traits>
 
-namespace picapau { namespace oracle { namespace core { namespace with_log {
+namespace picapau { namespace with_log { namespace oracle { namespace core { 
 
-using session = oracle::core::session;
+using session = picapau::oracle::core::session;
             
 //TODO:std::error_code instead of std::string
 template<typename F = handle_log>            
@@ -27,9 +28,9 @@ connect(std::string username, std::string password, std::string service,
                " password='" + password + "'" +
                " service='" + service + "'"));
     
-    auto res =  oracle::core::connect(std::move(username),
-                                      std::move(password),
-                                      std::move(service));
+    auto res =  picapau::oracle::core::connect(std::move(username),
+                                               std::move(password),
+                                               std::move(service));
 
     if(res) log += logln("connect", "Connected with success");
     else

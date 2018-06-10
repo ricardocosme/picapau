@@ -9,9 +9,9 @@
 
 #include "cfg.hpp"
 #include "picapau/utils/log_to_cout.hpp"
-#include "picapau/oracle/core/with_log/connect.hpp"
+#include "picapau/with_log/oracle/core/connect.hpp"
 
-namespace db = picapau::oracle::core::with_log;
+namespace db = picapau::with_log::oracle::core;
 
 BOOST_AUTO_TEST_CASE(SuccessfulConnect)
 {
