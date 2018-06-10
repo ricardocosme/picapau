@@ -15,17 +15,18 @@
 
 namespace picapau { namespace oracle { namespace core { namespace with_log {
 
-template<typename Tuple>
+template<typename Tuple, typename Log>
 struct column_fetch
 {
     template<typename Column>
     void operator()(Column& column) const
     {
-        oracle::core::fetch_column(rs, column, idx, tuple, fetch<Column>{});
+        oracle::core::fetch_column(rs, column, idx, tuple, fetch<Column, Log>{log});
     }
     ::oracle::occi::ResultSet& rs;
     std::size_t& idx;
-    Tuple& tuple;   
+    Tuple& tuple;
+    Log& log;
 };
                 
 template<typename ResultSet, typename F, typename Log = handle_log>
@@ -36,7 +37,7 @@ for_each(ResultSet& rs, F&& f, Log&& hlog = handle_log())
     std::size_t n_tuples{0};
     while(rs->next())
     {        
-        oracle::core::fetch_tuple<ResultSet, F, column_fetch<response_t>>(rs, f);
+        oracle::core::fetch_tuple<ResultSet, F, column_fetch<response_t, Log>>(rs, f, hlog);
         ++n_tuples;
     }
     

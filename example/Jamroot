@@ -33,27 +33,34 @@ project picapau_test
     <threading>single
   ;
 
-# run simple_query.cpp ;
-# run simple_query_with_log.cpp ;
-# run simple_query_with_custom_log.cpp ;
+run simple_query.cpp ;
+run simple_query_log.cpp ;
+run simple_query_custom_log.cpp ;
+run simple_query_stateless_custom_log.cpp ;
 
-exe simple_query
-  : simple_query.cpp
-  ;
-explicit simple_query ;
+# exe simple_query
+#   : simple_query.cpp
+#   ;
+# explicit simple_query ;
 
-exe simple_query_with_log
-  : simple_query_with_log.cpp
-  ;
-explicit simple_query_with_log ;
+# exe simple_query_log
+#   : simple_query_log.cpp
+#   ;
+# explicit simple_query_log ;
 
-exe simple_query_with_custom_log
-  : simple_query_with_custom_log.cpp
-  ;
-explicit simple_query_with_custom_log ;
+# exe simple_query_custom_log
+#   : simple_query_custom_log.cpp
+#   ;
+# explicit simple_query_custom_log ;
 
-install stage
-  : simple_query
-    simple_query_with_log
-    simple_query_with_custom_log
-  ;
+# exe simple_query_stateless_custom_log
+#   : simple_query_stateless_custom_log.cpp
+#   ;
+# explicit simple_query_stateless_custom_log ;
+
+# install stage
+#   : simple_query
+#     simple_query_log
+#     simple_query_custom_log
+#     simple_query_stateless_custom_log
+#   ;

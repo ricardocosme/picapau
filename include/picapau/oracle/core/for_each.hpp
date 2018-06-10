@@ -41,15 +41,18 @@ struct column_fetch
     Tuple& tuple;   
 };
 
-template<typename ResultSet, typename F, typename ColumnFetch>            
-inline void fetch_tuple(ResultSet& rs, F& f)
+template<typename ResultSet,
+         typename F,
+         typename ColumnFetch,
+         typename... ColumnFetchArgs>
+inline void fetch_tuple(ResultSet& rs, F& f, ColumnFetchArgs&&... args)
 {
     std::size_t idx{1};
     using tuple_t = typename ResultSet::tuple_t;
     using response_t = typename ResultSet::expected_tuple_t;
     response_t tuple(tuple_t{});
     boost::fusion::for_each(tuple.value(),
-                            ColumnFetch{*rs, idx, tuple});
+                            ColumnFetch{*rs, idx, tuple, std::forward<ColumnFetchArgs>(args)...});
     f(std::move(tuple));
 }
             
