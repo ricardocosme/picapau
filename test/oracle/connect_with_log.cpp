@@ -6,33 +6,40 @@
 
 #define BOOST_TEST_MODULE PICAPAU_ORACLE
 #include <boost/test/unit_test.hpp>
-
+#include <iostream>
 #include "cfg.hpp"
-#include "picapau/utils/log_to_cout.hpp"
-#include "picapau/with_log/oracle/core/connect.hpp"
+#include "picapau/oracle/with_log/connect.hpp"
 
-namespace db = picapau::with_log::oracle::core;
+namespace db = picapau::oracle::with_log;
 
 BOOST_AUTO_TEST_CASE(SuccessfulConnect)
 {
     auto s = db::connect(username, password, service);
-    BOOST_TEST(s.valid());
+    BOOST_TEST(!s.log.empty());
+    std::cout << s.log << std::endl;
+    BOOST_TEST(s.value.valid());
 }
 
 BOOST_AUTO_TEST_CASE(InvalidUserConnect)
 {
-    auto res = db::connect("<invalid>", password, service);
-    BOOST_TEST(!res.valid());
+    auto s = db::connect("<invalid>", password, service);
+    BOOST_TEST(!s.log.empty());
+    std::cout << s.log << std::endl;
+    BOOST_TEST(!s.value.valid());
 }
 
 BOOST_AUTO_TEST_CASE(InvalidPasswordConnect)
 {
-    auto res = db::connect(username, "<invalid>", service);
-    BOOST_TEST(!res.valid());
+    auto s = db::connect(username, "<invalid>", service);
+    BOOST_TEST(!s.log.empty());
+    std::cout << s.log << std::endl;
+    BOOST_TEST(!s.value.valid());
 }
 
 BOOST_AUTO_TEST_CASE(InvalidServiceConnect)
 {
-    auto res = db::connect(username, password, "<invalid>");
-    BOOST_TEST(!res.valid());
+    auto s = db::connect(username, password, "<invalid>");
+    BOOST_TEST(!s.log.empty());
+    std::cout << s.log << std::endl;
+    BOOST_TEST(!s.value.valid());
 }

@@ -6,6 +6,7 @@ boost.use-project ;
 local occi_inc = "/home/rcosme/build/v3o2/gcc48/dependencies/ext/oracle/include" ;
 local occi_lib = "/home/rcosme/build/v3o2/gcc48/dependencies/ext/oracle/lib/Linux64e6" ;
 local boost_expected = "/home/rcosme/build/expected" ;
+local range_v3 = "/home/rcosme/build/v3o2/gcc48/dependencies/ext/range-v3" ;
 
 project occi
   : requirements
@@ -25,6 +26,7 @@ project picapau_test
     <include>$(here)
     <include>$(root)/include
     <include>$(boost_expected)/include
+    <include>$(range_v3)/include
     <library>/boost//unit_test_framework
     <library>/occi//occi
     <library>/occi//clntsh
@@ -35,11 +37,9 @@ project picapau_test
   ;
 
 run oracle/connect.cpp ;
+run oracle/connect_custom_with_log.cpp ;
 run oracle/connect_with_log.cpp ;
-run oracle/rs_connect.cpp ;
-run oracle/rs_connect_with_log.cpp ;
-
 run oracle/query.cpp ;
+run oracle/query_map_rs.cpp ;
 run oracle/query_with_log.cpp ;
-run oracle/rs_query.cpp ;
 run oracle/rs_query_with_log.cpp ;

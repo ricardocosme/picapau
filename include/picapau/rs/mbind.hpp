@@ -23,7 +23,7 @@ template<typename Transform, typename Sink>
 struct sink_mbinded
 {
     template<typename Input>
-    void operator()(Input&& in) const
+    void operator()(Input&& in)
     { _transform(std::forward<Input>(in)) >>= _sink; }
     
     Transform _transform;

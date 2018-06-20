@@ -12,9 +12,9 @@
 namespace picapau { namespace rs { 
 
 template<typename F>
-struct transform_wrapper
+struct filter_wrapper
 {
-    transform_wrapper(F f)
+    filter_wrapper(F f)
         : _f(std::move(f))
     {}
     
@@ -26,26 +26,26 @@ struct transform_wrapper
     F _f;
 };
     
-template<typename Transform, typename Sink>
-struct sink_transformed
+template<typename Filter, typename Sink>
+struct sink_filtered
 {
     template<typename Input>
     void operator()(Input&& in) 
-    { _sink(_transform(std::forward<Input>(in))); }
+    { if(_filter(in)) _sink(std::forward<Input>(in)); }
     
-    Transform _transform;
+    Filter _filter;
     Sink _sink;
 };
             
 template<typename F>
-inline auto transform(F&& f)
+inline auto filter(F&& f)
 PICAPAU_DECLTYPE_AUTO_RETURN
-( transform_wrapper<F>(std::forward<F>(f)) )
+( filter_wrapper<F>(std::forward<F>(f)) )
     
 template<typename F, typename Sink>
-inline auto operator>>=(transform_wrapper<F> lhs, Sink&& sink)
+inline auto operator>>=(filter_wrapper<F> lhs, Sink&& sink)
 PICAPAU_DECLTYPE_AUTO_RETURN
-( sink_transformed<transform_wrapper<F>, Sink>
+( sink_filtered<filter_wrapper<F>, Sink>
   {std::move(lhs), std::forward<Sink>(sink)} )
 
 }}

@@ -2,31 +2,31 @@
 #include <boost/test/unit_test.hpp>
 
 #include "cfg.hpp"
-#include "picapau/utils/log_to_cout.hpp"
-#include "picapau/with_log/oracle/core/connect.hpp"
-#include "picapau/with_log/oracle/core/for_each.hpp"
-#include "picapau/with_log/oracle/core/query.hpp"
-#include <boost/fusion/include/at_c.hpp>
+#include "picapau/support/lift_with_log.hpp"
+#include "picapau/oracle/with_log/connect.hpp"
+#include "picapau/oracle/with_log/query.hpp"
+#include <range/v3/range_for.hpp>
 #include <vector>
-
-namespace sql = picapau::with_log;
-namespace db = sql::oracle::core;
+#include <iostream>
+namespace db = picapau::oracle::with_log;
 using namespace boost::fusion;
 
 BOOST_AUTO_TEST_CASE(SuccessfulSelect)
 {
-    std::vector<int> v;
-    db::connect(username, password, service)
-        .bind([&](db::session s)
-              { return db::exec_query<int>(std::move(s), "SELECT poco_cd_poco FROM poco"); })
-        .map([&](db::query_result<int> r)
-             {
-                 db::for_each(r.rows, [&](boost::expected<vector1<int>, std::string> row)
-                               {
-                                   BOOST_TEST(row.valid());
-                                   v.push_back(at_c<0>(row.value()));
-                               });
-             });
-    
+    std::vector<vector<int, std::string>> v;
+    auto conn = db::connect(username, password, service);
+    auto m = mbind(conn, picapau::lift_with_log
+                   ([](const db::session& s)
+                    { return db::exec_query<int, std::string>(s, "SELECT poco_cd_poco, poco_nm_completo FROM poco"); }));
+    std::cout << m.log;
+    m.value.map([&](db::result_set<int, std::string> rs)
+                {
+                    RANGES_FOR(auto&& tuple, rs)
+                    {
+                        BOOST_TEST(tuple.value.valid());
+                        std::cout << tuple.log;
+                        v.push_back(tuple.value.value());
+                    }
+                });
     BOOST_TEST(v.size() == 2);
 }

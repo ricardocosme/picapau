@@ -8,9 +8,9 @@
 #include <boost/test/unit_test.hpp>
 
 #include "cfg.hpp"
-#include "picapau/oracle/core/connect.hpp"
+#include "picapau/oracle/connect.hpp"
 
-namespace db = picapau::oracle::core;
+namespace db = picapau::oracle;
 
 BOOST_AUTO_TEST_CASE(SuccessfulConnect)
 {

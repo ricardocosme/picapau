@@ -15,7 +15,7 @@ template<typename Sink>
 struct sink_joined
 {
     template<typename Stream>
-    void operator()(Stream&& stream) const
+    void operator()(Stream&& stream)
     { std::forward<Stream>(stream) >>= _sink; }
     
     Sink _sink;
