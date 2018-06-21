@@ -6,10 +6,8 @@
 
 #pragma once
 
-#include "picapau/support/with_log.hpp"
 #include "picapau/oracle/with_log/result_set.hpp"
-// #include <range/v3/range_for.hpp>
-#include <range/v3/all.hpp>
+#include <range/v3/begin_end.hpp>
 #include <utility>
 
 namespace picapau { namespace oracle { namespace with_log { namespace rs {
@@ -28,25 +26,32 @@ struct result_set_source
 {
     result_set_source(ResultSet rs, Sink sink)
     {
+        using expected_t = typename ResultSet::value_type;
+        using value_type = typename expected_t::value_type;
+        
         if(rs.value.valid())
         {            
             auto& tuples = rs.value.value();
             auto it = ranges::begin(tuples);
             if(it != ranges::end(tuples))
             {
-                auto fst = *it;
-                decltype(fst) transformed_fst(std::move(fst.value),
-                                              rs.log + fst.log);
+                auto transformed_fst = picapau::mbind(rs, [&it](const expected_t&)
+                                                          { return *it; });
                 sink(std::forward<decltype(*it)>(std::move(transformed_fst)));
                 ++it;
             }
+            rs.log = "";
             for(; it != ranges::end(tuples); ++it)
-            { sink(std::forward<decltype(*it)>(*it)); }
+                { sink(picapau::mbind(rs, [&it](const expected_t&)
+                                          { return std::forward<decltype(*it)>(*it); })); }
         }
         else
         {
-            sink(typename ResultSet::value_type::value_type::expected_tuple_t
-                 (rs.value.get_unexpected(), rs.log));
+            sink(picapau::mbind(rs, [](const expected_t& e)
+                                    {
+                                        return typename value_type::expected_tuple_t
+                                            (e.get_unexpected());
+                                    }));
         }
     }
 };

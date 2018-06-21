@@ -6,7 +6,6 @@
 
 #pragma once
 
-#include "picapau/detail/macro_decltype_auto_return.hpp"
 #include <utility>
 
 namespace picapau { namespace rs { 
@@ -14,16 +13,16 @@ namespace picapau { namespace rs {
 template<typename F>
 struct transform_wrapper
 {
+    F _f;
+    
     transform_wrapper(F f)
         : _f(std::move(f))
-    {}
+    {}    
     
     template<typename T>
     auto operator()(T&& o) 
         -> decltype(std::declval<F>()(std::declval<T>()))
     { return _f(std::forward<T>(o)); }
-    
-    F _f;
 };
     
 template<typename Transform, typename Sink>

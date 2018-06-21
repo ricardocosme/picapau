@@ -8,15 +8,13 @@
 
 #include "picapau/oracle/connect.hpp"
 #include "picapau/oracle/with_log/session.hpp"
-#include "picapau/support/with_log.hpp"
 
 namespace picapau { namespace oracle { namespace with_log {
 
-template<template <typename> class WithLog = picapau::with_log>
-inline WithLog<boost::expected<session, std::string>>
+inline picapau::with_log<boost::expected<session, std::string>>
 connect(std::string username, std::string password, std::string service)
 {
-    using with_log_t = WithLog<boost::expected<session, std::string>>;
+    using with_log_t = picapau::with_log<boost::expected<session, std::string>>;
     
     std::string log
         (with_log_t::logln("connect", "username='" + username + "'" +

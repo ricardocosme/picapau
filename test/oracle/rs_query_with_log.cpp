@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "cfg.hpp"
+#include "my_with_log.hpp"
 #include "picapau/oracle/with_log/rs/connect.hpp"
 #include "picapau/oracle/with_log/rs/result_set.hpp"
 #include "picapau/oracle/with_log/rs/query.hpp"
@@ -25,18 +26,13 @@ struct Print {
     template<typename T>
     void operator()(T&& t) const
     {
-        std::cout << t.second << std::endl;
-        std::cout << t.first.log;
-        if(t.first.value.valid())
-            std::cout << t.first.value.value() << std::endl;
+        std::cout << t.cmdExec << std::endl;
+        std::cout << t.log << std::endl;
+        if(t.value.valid())
+            std::cout << "Value: " << t.value.value() << std::endl;
         else
-            std::cout << t.first.value.get_unexpected().value() << std::endl;
+            std::cout << "Error: " << t.value.get_unexpected().value() << std::endl;
     }
-};
-
-struct CmdExecution{
-    CmdExecution(){ std::cout << "CmdExecution ctor" << std::endl; }
-    ~CmdExecution(){ std::cout << "CmdExecution dtor" << std::endl; }
 };
 
 struct AppendImpl
@@ -68,25 +64,40 @@ struct HasResultSet {
     { return e.valid(); }
 };
 
+struct AppendCmdExec {
+    template<typename ES>
+    ES operator()(ES& es)
+    {
+        es.cmdExec.reset(new CmdExecution);
+        return es;
+    }
+};
+
+template<typename WithLog>
+inline std::pair<std::unique_ptr<CmdExecution>, WithLog>
+withCmdExec(WithLog wlog)
+{
+    std::unique_ptr<CmdExecution> cmdExec(new CmdExecution);
+    wlog.cmdExec = cmdExec.get();
+    return std::make_pair(std::move(cmdExec), std::move(wlog));
+}
+
+template<typename Pair>
+inline typename Pair::second_type
+second(Pair&& p)
+{ return std::move(p.second); }
+
+struct PassOnlySession {
+    template<typename Pair>
+    typename Pair::second_type& operator()(Pair& p)
+    { return p.second; }
+};
+
 BOOST_AUTO_TEST_CASE(SuccessfulSelect)
 {
-    // std::vector<vector<int>> v;
-    db::rs::connect(username, password, service)
+    rs::values(withCmdExec(db::connect(username, password, service)))
+        >>= rs::transform(PassOnlySession{})
         >>= db::rs::query<int>("SELECT poco_cd_poco FROM poco")
-        >>= rs::transform([](picapau::with_log<boost::expected<db::result_set<int>, std::string>> rs)
-                          {
-                              //Handling log
-                              std::cout << rs.log;
-                              //Handling error
-                              if(!rs.value.valid())
-                                  std::cout << rs.value.get_unexpected().value();
-                              return std::move(rs.value);
-                          })
-        >>= rs::filter(HasResultSet{})
-        >>= rs::transform(AppendCmdExecution{})
         >>= rs::join()
         >>= Print{};
-        // >>= [](picapau::with_log<boost::expected<db::result_set<int>, std::string>> rs)
-        //     { std::cout << rs.log << std::endl; };
-    // BOOST_TEST(v.size() == 2);
 }

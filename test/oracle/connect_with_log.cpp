@@ -8,6 +8,7 @@
 #include <boost/test/unit_test.hpp>
 #include <iostream>
 #include "cfg.hpp"
+#include "picapau/support/with_log.hpp"
 #include "picapau/oracle/with_log/connect.hpp"
 
 namespace db = picapau::oracle::with_log;

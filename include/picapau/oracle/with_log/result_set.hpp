@@ -44,6 +44,7 @@ namespace detail {
             return std::forward<T>(in);
         }
     };
+
     template<typename Tuple>
     using with_log_expected_tuple = picapau::with_log<boost::expected<Tuple, std::string>>;
 }

@@ -11,13 +11,12 @@
 #include "picapau/oracle/with_log/session.hpp"
 #include "picapau/rs/transform.hpp"
 #include "picapau/support/lift_with_log.hpp"
-#include "picapau/support/with_log.hpp"
 
 namespace picapau { namespace oracle { namespace with_log { namespace rs {
 
 namespace detail {
 
-template<typename... Columns>    
+template<typename... Columns>
 struct lift_query
 {
     std::string squery;
@@ -25,10 +24,10 @@ struct lift_query
     template<typename Session>
     auto operator()(Session &s) 
     PICAPAU_DECLTYPE_AUTO_RETURN
-    ( picapau::oracle::with_log::exec_query<Columns...>(s, std::move(squery)) )
+        ( picapau::oracle::with_log::exec_query<Columns...>(s, std::move(squery)) )
 };
 
-template<typename... Columns>    
+template<typename... Columns>
 struct exec_query
 {
     std::string squery;
@@ -41,7 +40,7 @@ struct exec_query
     
 } //namespace detail
 
-template<typename... Columns>            
+template<typename... Columns>
 auto query(std::string squery)
 PICAPAU_DECLTYPE_AUTO_RETURN
 ( picapau::rs::transform(detail::exec_query<Columns...>{std::move(squery)}) )

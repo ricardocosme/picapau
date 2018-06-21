@@ -1,19 +1,19 @@
 
-// Copyright Ricardo Calheiros de Miranda Cosme 2018.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE or copy at
-//  http://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
 
-#include "picapau/support/is_with_log.hpp"
+#include <picapau/support/is_with_log.hpp>
 
-#include <string>
 #include <type_traits>
 #include <utility>
 
-namespace picapau { 
+struct CmdExecution{
+    CmdExecution(){ std::cout << "CmdExecution ctor " << this << std::endl; }
+    ~CmdExecution(){ std::cout << "CmdExecution dtor" << std::endl; }
+};
 
+namespace picapau {
+    
 template<typename T>
 struct with_log : with_log_base
 {
@@ -30,6 +30,7 @@ struct with_log : with_log_base
     
     T value;
     std::string log;
+    CmdExecution* cmdExec{nullptr};
 };
         
 template<typename T,
@@ -41,7 +42,10 @@ template<typename T,
 inline Ret mbind(with_log<T>& m1, F&& f)
 {
     auto m2 = f(m1.value);
-    return {std::move(m2.value), m1.log + m2.log};
+    Ret ret(std::move(m2.value), m1.log + m2.log);
+    ret.cmdExec = m1.cmdExec;
+    return ret;
 }
-        
+
 }
+

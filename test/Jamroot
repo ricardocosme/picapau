@@ -37,7 +37,6 @@ project picapau_test
   ;
 
 run oracle/connect.cpp ;
-run oracle/connect_custom_with_log.cpp ;
 run oracle/connect_with_log.cpp ;
 run oracle/query.cpp ;
 run oracle/query_map_rs.cpp ;

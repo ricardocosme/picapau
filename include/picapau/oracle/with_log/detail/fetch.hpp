@@ -2,16 +2,14 @@
 
 #include "picapau/detail/to_string.hpp"
 #include "picapau/oracle/detail/fetch.hpp"
-#include "picapau/support/with_log.hpp"
 
 namespace picapau { namespace oracle { namespace with_log { namespace detail {
     
-template<typename Column,
-         template <typename> class WithLog = picapau::with_log>
-inline WithLog<boost::expected<Column, std::string>>
+template<typename Column>
+inline picapau::with_log<boost::expected<Column, std::string>>
 fetch(::oracle::occi::ResultSet& rs, std::size_t idx)
 {
-    using with_log_t = WithLog<boost::expected<Column, std::string>>;
+    using with_log_t = picapau::with_log<boost::expected<Column, std::string>>;
     
     auto res = oracle::detail::fetch<Column>(rs, idx);
     

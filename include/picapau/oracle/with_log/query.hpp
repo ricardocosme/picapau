@@ -10,16 +10,14 @@
 #include "picapau/oracle/detail/query.hpp"
 
 #include "picapau/oracle/with_log/result_set.hpp"
-#include "picapau/support/with_log.hpp"
 
 namespace picapau { namespace oracle { namespace with_log {
         
-template<typename... Columns,
-         template <typename> class WithLog = picapau::with_log>
-inline WithLog<boost::expected<result_set<Columns...>, std::string>>
+template<typename... Columns>
+inline picapau::with_log<boost::expected<result_set<Columns...>, std::string>>
 exec_query(const session& s, std::string squery)
 {
-    using with_log_t = WithLog<boost::expected<result_set<Columns...>,
+    using with_log_t = picapau::with_log<boost::expected<result_set<Columns...>,
                                                std::string>>;
     
     std::string log(with_log_t::logln("query", "statement='" + squery + "'"));

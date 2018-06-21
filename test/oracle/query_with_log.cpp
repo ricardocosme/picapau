@@ -2,6 +2,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "cfg.hpp"
+#include "picapau/support/with_log.hpp"
 #include "picapau/support/lift_with_log.hpp"
 #include "picapau/oracle/with_log/connect.hpp"
 #include "picapau/oracle/with_log/query.hpp"

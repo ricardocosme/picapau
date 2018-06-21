@@ -6,10 +6,8 @@
 
 #pragma once
 
+#include "picapau/oracle/detail/fetch.hpp"
 #include "picapau/oracle/detail/result_set.hpp"
-#include <boost/fusion/include/mpl.hpp>
-#include <boost/fusion/include/as_vector.hpp>
-#include <boost/mpl/vector.hpp>
 #include <string>
 
 namespace picapau { namespace oracle { 

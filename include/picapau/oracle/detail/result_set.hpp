@@ -6,10 +6,9 @@
 
 #pragma once
 
-#include "picapau/detail/macro_decltype_auto_return.hpp"
-#include "picapau/oracle/detail/fetch.hpp"
 #include "picapau/oracle/statement.hpp"
-#include "picapau/support/with_log.hpp"
+#include "picapau/support/is_with_log.hpp"
+
 #include <boost/fusion/include/mpl.hpp>
 #include <boost/fusion/include/as_vector.hpp>
 #include <boost/fusion/include/for_each.hpp>
@@ -17,7 +16,7 @@
 #include <occi.h>
 #include <range/v3/view_facade.hpp>
 #include <string>
-#include <range/v3/all.hpp>
+#include <type_traits>
 
 namespace picapau { namespace oracle { namespace detail {
 
