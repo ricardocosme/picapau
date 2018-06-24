@@ -65,7 +65,7 @@ private:
             expected_tuple_t exptuple(tuple_t{});
             boost::fusion::for_each(get_tuple(exptuple),
                                     ColumnFetch<expected_tuple_t>{*_rs, idx, exptuple});            
-            return Transform{}(std::move(exptuple));
+            return _transform(std::move(exptuple));
         }
         
         bool equal(ranges::default_sentinel) const
@@ -73,6 +73,8 @@ private:
 
         void next()
         { _rs->next(); }
+        
+        Transform _transform;
     };
 
     cursor begin_cursor() const

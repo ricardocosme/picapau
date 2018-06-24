@@ -18,7 +18,6 @@ connect(std::string username, std::string password, std::string service)
     
     std::string log
         (with_log_t::logln("connect", "username='" + username + "'" +
-                           " password='" + password + "'" +
                            " service='" + service + "'"));
     
     auto res =  picapau::oracle::connect(std::move(username),

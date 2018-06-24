@@ -39,10 +39,12 @@ namespace detail {
         {
             std::stringstream stream;
             if(in.value.valid())
-                stream << in.value.value() << " tuple fetched";
+                stream << in.value.value() << " tuple #"
+                       << count++ << " fetched";
             in.log += T::logln("fetch", stream.str());
             return std::forward<T>(in);
         }
+        mutable std::size_t count{0};
     };
 
     template<typename Tuple>

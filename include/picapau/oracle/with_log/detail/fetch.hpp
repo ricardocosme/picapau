@@ -14,10 +14,7 @@ fetch(::oracle::occi::ResultSet& rs, std::size_t idx)
     auto res = oracle::detail::fetch<Column>(rs, idx);
     
     std::string log;
-    if(res) log += with_log_t::logln("fetch", "'" + picapau::detail::to_string(res.value()) +
-                         "' fetched from " +
-                         " column=" + picapau::detail::to_string(idx));
-    else
+    if(!res)
         log += with_log_t::logln("fetch", "Fetch failed for column=" + picapau::detail::to_string(idx)) +
             with_log_t::logln("fetch", "Error: " + res.get_unexpected().value());
     
